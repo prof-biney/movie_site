@@ -1,5 +1,16 @@
-import React from "react";
+export default function Search({ searchTerm, setSearchTerm }) {
+  return (
+    <div className="search">
+      <div>
+        <img src="search.svg" alt="search" />
 
-export default function Search() {
-  return <div>Search</div>;
+        <input
+          type="text"
+          placeholder="Search through thousands of movies"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+    </div>
+  );
 }
