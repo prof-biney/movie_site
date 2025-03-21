@@ -3,6 +3,7 @@ import Search from "./components/Search";
 import { Movie } from "./lib/types";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
+import { useDebounce } from "react-use";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -21,6 +22,9 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDecouncedSearchTerm] = useState("");
+
+  useDebounce(() => setDecouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
   const fetchMovies = async (query: string) => {
     try {
@@ -57,8 +61,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetchMovies(searchTerm);
-  }, [searchTerm]);
+    fetchMovies(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <main>
