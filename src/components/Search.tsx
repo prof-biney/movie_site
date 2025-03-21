@@ -1,4 +1,9 @@
-export default function Search({ searchTerm, setSearchTerm }) {
+type SearchProps = {
+  searchTerm: string;
+  setSearchTerm: (query: string) => void;
+};
+
+export default function Search({ searchTerm, setSearchTerm }: SearchProps) {
   return (
     <div className="search">
       <div>
