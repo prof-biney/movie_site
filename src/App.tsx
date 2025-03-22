@@ -23,9 +23,7 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [movieList, setMovieList] = useState<Movie[]>([]);
-  const [trendingMovies, setTrendingMovies] = useState<
-    Models.Document[] | undefined
-  >([]);
+  const [trendingMovies, setTrendingMovies] = useState<Models.Document[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearchTerm, setDecouncedSearchTerm] = useState("");
 
@@ -73,7 +71,7 @@ export default function App() {
     try {
       const movies = await getTrendingMovies();
 
-      setTrendingMovies(movies);
+      if (movies) setTrendingMovies(movies);
     } catch (error) {
       console.error(error);
     }
@@ -82,6 +80,10 @@ export default function App() {
   useEffect(() => {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    loadTrendingMovies();
+  }, []);
 
   return (
     <main>
@@ -98,8 +100,23 @@ export default function App() {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
+        {trendingMovies.length > 0 && (
+          <section className="trending">
+            <h2>Trending Movies</h2>
+
+            <ul>
+              {trendingMovies?.map((movie, index) => (
+                <li key={movie.$id}>
+                  <p>{index + 1}</p>
+                  <img src={movie.poster_url} alt={movie.title} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="all-movies">
-          <h2 className="mt-[40px]">All Movies</h2>
+          <h2>All Movies</h2>
 
           {isLoading ? (
             <Spinner />
