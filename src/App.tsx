@@ -4,7 +4,8 @@ import { Movie } from "./lib/types";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
-import { updateSearchCountTest } from "./appwrite";
+import { getTrendingMovies, updateSearchCountTest } from "./appwrite";
+import { Models } from "appwrite";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -22,6 +23,9 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [movieList, setMovieList] = useState<Movie[]>([]);
+  const [trendingMovies, setTrendingMovies] = useState<
+    Models.Document[] | undefined
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearchTerm, setDecouncedSearchTerm] = useState("");
 
@@ -62,6 +66,16 @@ export default function App() {
       setErrorMessage("Error fetching movies. Please try again later.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadTrendingMovies = async () => {
+    try {
+      const movies = await getTrendingMovies();
+
+      setTrendingMovies(movies);
+    } catch (error) {
+      console.error(error);
     }
   };
 
